@@ -14,10 +14,8 @@ void assert_read(int fildes, void *buf, size_t nbyte) {
 char *readnetstring(int fd, char *buf, size_t buflen, size_t *len) {
 	assert_read(fd, buf, 3);
 
-	int off;
-	if (memchr(buf, ':', 3) != 0)
-		off = 3;
-	else {
+	int off = 3;
+	if (memchr(buf, ':', 3) == 0) {
 		assert_read(fd, buf+3, 102);
 		off = 105;
 	}
