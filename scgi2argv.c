@@ -14,8 +14,10 @@ void assert_read(int fildes, void *buf, size_t nbyte) {
 char *readnetstring(int fd, char *buf, size_t buflen, size_t *len) {
 	assert_read(fd, buf, 3);
 
-	int off = 3;
-	if (memchr(buf, ':', 3) == 0) {
+	int off;
+	if (memchr(buf, ':', 3) != 0)
+		off = 3;
+	else {
 		assert_read(fd, buf+3, 102);
 		off = 105;
 	}
@@ -58,6 +60,7 @@ int main(int argc, char **argv) {
 	for (size_t x = 0; x < len; x += strlen(str+x)+1)
 		pusharray(abuf, amax, &alen, str+x);
 
+	pusharray(abuf, amax, &alen, 0);
 	execvp(abuf[0], abuf);
 	err(2, "execvp");
 }
